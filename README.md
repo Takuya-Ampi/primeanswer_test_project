@@ -26,18 +26,37 @@ Express.js + TypeScript + Jestによる実践的テストのサンプルコー�
    npm install
    ```
 
-3. 環境変数を設定
+3. 開発用データベースを起動
+   ```
+   docker-compose -f docker-compose.test.yml up -d postgres-local
+   ```
+
+4. 環境変数を設定
    ```
    cp .env.example .env
    ```
    `.env`ファイルを編集して適切なデータベースURLを設定
 
-4. データベースマイグレーション
+5. データベースマイグレーション
    ```
    npx prisma migrate dev
    ```
+   
+   以下のようなプロセスが実行されます：
+   ```
+   Need to install the following packages:
+   prisma@6.7.0
+   Ok to proceed? (y) y // yを入力してenterを押してください
+   Environment variables loaded from .env
+   Prisma schema loaded from prisma/schema.prisma
+   Datasource "db": PostgreSQL database "development_db", schema "public" at "localhost:5432"
+   // 下記が聞かれるので、add_tablesと入力して、enterを押してください
+   ? Enter a name for the new migration: › add_tables
+   ```
+   
+   マイグレーション名（例：`add_tables`）を入力すると、データベーススキーマが作成されます。
 
-5. 開発サーバーを起動
+6. 開発サーバーを起動
    ```
    npm run dev
    ```
@@ -46,19 +65,32 @@ Express.js + TypeScript + Jestによる実践的テストのサンプルコー�
 
 1. テスト用のデータベースを起動
    ```
-   docker-compose -f docker-compose.test.yml up -d
+   docker-compose -f docker-compose.test.yml up -d postgres-test
    ```
 
 2. テスト用の環境変数を設定
    ```
-   cp .env.example .env
+   cp .env.example .env.test
    ```
-   `.env`ファイルを編集して適切なデータベースURLを設定
+   `.env.test`ファイルを編集して適切なデータベースURLを設定（ポート5433を使用）
 
 3. テストの実行
    ```
    npm test
    ```
+
+## Docker環境について
+
+### 利用可能なサービス
+
+- **postgres-local** - 開発環境用のデータベース（ポート5432）
+- **postgres-test** - テスト環境用のデータベース（ポート5433）
+
+### 開発とテスト両方の環境を起動
+
+```bash
+docker-compose -f docker-compose.test.yml up -d
+```
 
 ## テスト実行
 
@@ -93,6 +125,9 @@ npm run test:ci
 ├── jest.config.js       # Jestの設定
 ├── package.json         # 依存関係
 ├── tsconfig.json        # TypeScript設定
-├── docker-compose.test.yml # テスト用Docker Compose
+├── docker-compose.test.yml # Docker Compose設定
+├── .env.example         # 環境変数の例
+├── .env                 # 開発環境の環境変数
+├── .env.test            # テスト環境の環境変数
 └── README.md            # このファイル
 ``` 
