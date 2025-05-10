@@ -85,7 +85,7 @@ Express.js + TypeScript + Jestによる実践的テストのサンプルコー�
 
 3. テストの実行
    ```
-   npm test
+   npm run test
    ```
 
 ## 環境変数ファイル
@@ -136,7 +136,7 @@ docker-compose -f docker-compose.test.yml stop postgres-test
 
 ```bash
 # 全テストを実行
-npm test
+npm run test
 
 # 監視モードでテストを実行
 npm run test:watch
