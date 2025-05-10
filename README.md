@@ -33,9 +33,9 @@ Express.js + TypeScript + Jestによる実践的テストのサンプルコー�
 
 4. 環境変数を設定
    ```
-   cp .env.example .env
+   cp .env.example.local .env
    ```
-   `.env`ファイルを編集して適切なデータベースURLを設定
+   `.env`ファイルが開発用の環境変数で設定されます。
 
 5. データベースマイグレーション
    ```
@@ -79,14 +79,23 @@ Express.js + TypeScript + Jestによる実践的テストのサンプルコー�
 
 2. テスト用の環境変数を設定
    ```
-   cp .env.example .env.test
+   cp .env.example.test .env.test
    ```
-   `.env.test`ファイルを編集して適切なデータベースURLを設定（ポート5433を使用）
+   `.env.test`ファイルがテスト用の環境変数で設定されます。
 
 3. テストの実行
    ```
    npm test
    ```
+
+## 環境変数ファイル
+
+プロジェクトには2つの環境変数のサンプルファイルが含まれています：
+
+- `.env.example.local` - 開発環境用の設定例（ローカル開発用）
+- `.env.example.test` - テスト環境用の設定例（テスト実行用）
+
+実際に使用する場合は、これらのファイルをコピーして`.env`や`.env.test`として使用します。秘匿情報（シークレットキーなど）は本番環境では必ず変更してください。
 
 ## Docker環境について
 
@@ -135,8 +144,9 @@ npm run test:ci
 ├── package.json         # 依存関係
 ├── tsconfig.json        # TypeScript設定
 ├── docker-compose.test.yml # Docker Compose設定
-├── .env.example         # 環境変数の例
-├── .env                 # 開発環境の環境変数
+├── .env.example.local   # 開発環境用の環境変数例
+├── .env.example.test    # テスト環境用の環境変数例
+├── .env                 # 開発環境の環境変数（ローカル用）
 ├── .env.test            # テスト環境の環境変数
 └── README.md            # このファイル
 ``` 
