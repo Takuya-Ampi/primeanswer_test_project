@@ -60,6 +60,15 @@ Express.js + TypeScript + Jestによる実践的テストのサンプルコー�
    ```
    npm run dev
    ```
+   
+   サーバーが正常に起動すると、以下のようなメッセージが表示されます：
+   ```
+   Server is running on http://localhost:3000
+   ```
+   
+   ブラウザで http://localhost:3000/posts にアクセスすると、初期状態では空の配列（`[]`）が表示されます。
+   
+   サーバーを停止するには、ターミナルで `Ctrl + C` （コントロール + C）を押してください。
 
 ### テスト環境
 
