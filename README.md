@@ -110,6 +110,28 @@ Express.js + TypeScript + Jestによる実践的テストのサンプルコー�
 docker-compose -f docker-compose.test.yml up -d
 ```
 
+### Docker環境の停止方法
+
+コンテナの停止（データは保持されます）：
+```bash
+docker-compose -f docker-compose.test.yml stop
+```
+
+コンテナの停止と削除（ボリュームはそのまま残ります）：
+```bash
+docker-compose -f docker-compose.test.yml down
+```
+
+コンテナとボリュームの両方を削除（すべてのデータが失われます）：
+```bash
+docker-compose -f docker-compose.test.yml down -v
+```
+
+特定のサービスだけを停止する場合（例：postgres-test）：
+```bash
+docker-compose -f docker-compose.test.yml stop postgres-test
+```
+
 ## テスト実行
 
 ```bash
