@@ -1,0 +1,27 @@
+# Git の無視リスト
+
+# 環境変数ファイル
+.env
+.env.*
+!.env.example
+
+# 依存関係
+node_modules/
+
+# ビルド成果物
+dist/
+build/
+
+# ログ
+logs/
+*.log
+
+# エディタ固有のファイル
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS固有のファイル
+.DS_Store
+Thumb.db

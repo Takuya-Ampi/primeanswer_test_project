@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  postgres-test:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test_db
+    ports:
+      - "5433:5432"
+    command: postgres -c fsync=off -c full_page_writes=off 
