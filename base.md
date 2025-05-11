@@ -1491,39 +1491,9 @@ describe('createPostHandler', () => {
 });
 ```
 
----
 
-### テスト実行
 
-```bash
-# テスト環境のDBを起動
-docker-compose -f docker-compose.test.yml up -d
 
-# テーブルを作成
-npx prisma migrate deploy
-
-# 全テストを実行
-npm test
-
-# カバレッジ付きで実行
-npm test -- --coverage
-
-# 特定のテストファイルを実行
-npm test -- posts.integration.test.ts
-```
-
-## **src/package.jsonのscripts設定**
-
-```json
-{
-  "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:ci": "jest --ci --coverage --maxWorkers=4"
-  }
-}
-```
 
 ---
 
