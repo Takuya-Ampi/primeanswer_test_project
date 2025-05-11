@@ -10,6 +10,7 @@ Express.js + TypeScript + Jestによる実践的テストのサンプルコー�
 - **Prisma** - ORM
 - **PostgreSQL** - データベース
 - **Docker Compose** - 環境管理
+- **Swagger** - API ドキュメント
 
 ## セットアップ手順
 
@@ -69,6 +70,17 @@ Express.js + TypeScript + Jestによる実践的テストのサンプルコー�
    ブラウザで http://localhost:3000/posts にアクセスすると、初期状態では空の配列（`[]`）が表示されます。
    
    サーバーを停止するには、ターミナルで `Ctrl + C` （コントロール + C）を押してください。
+
+### API ドキュメント (Swagger)
+
+APIの詳細なドキュメントは、Swagger UIで確認できます。サーバー起動後、以下のURLにアクセスしてください：
+
+http://localhost:3000/api-docs
+
+Swagger UI では以下のことができます：
+- 全APIエンドポイントの一覧確認
+- 各エンドポイントのリクエスト/レスポンスの詳細確認
+- APIを直接テスト実行
 
 ### テストの実行
 
@@ -144,7 +156,8 @@ npm run test:ci
 │   ├── test/            # テスト設定
 │   ├── __tests__/       # 統合テスト
 │   ├── app.ts           # Expressアプリ設定
-│   └── server.ts        # サーバーエントリーポイント
+│   ├── server.ts        # サーバーエントリーポイント
+│   └── swagger.ts       # Swagger設定
 ├── jest.config.js       # Jestの設定
 ├── package.json         # 依存関係
 ├── tsconfig.json        # TypeScript設定
