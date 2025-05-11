@@ -1,4 +1,4 @@
-import { validatePostLength } from '../postService';
+import { validatePostLength } from '../services/postService';
 
 describe('validatePostLength', () => {
   it('140文字以内の投稿はtrueを返す', () => {
