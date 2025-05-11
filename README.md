@@ -84,10 +84,29 @@ Swagger UI では以下のことができます：
 
 ### テストの実行
 
-テストを実行するには、開発環境と同じデータベースを使用します：
+テストを実行するには以下のコマンドを使用します：
 
 ```
 npm run test
+```
+
+`npm run test`を実行すると、自動的に以下のことが行われます：
+1. `pretest`スクリプトが実行され、データベースが初期化されます（`prisma migrate reset`）
+2. 各テストケースが実行されます
+
+これにより毎回クリーンな環境でテストが実行されるため、テスト間の依存性や副作用を心配する必要がありません。
+
+その他のテストコマンド：
+
+```bash
+# 監視モードでテストを実行（ファイル変更時に自動再実行）
+npm run test:watch
+
+# カバレッジ付きでテストを実行
+npm run test:coverage
+
+# CI/CD用のテスト実行
+npm run test:ci
 ```
 
 ## 環境変数ファイル
@@ -125,22 +144,6 @@ docker-compose down
 コンテナとボリュームの両方を削除（すべてのデータが失われます）：
 ```bash
 docker-compose down -v
-```
-
-## テスト実行
-
-```bash
-# 全テストを実行
-npm run test
-
-# 監視モードでテストを実行
-npm run test:watch
-
-# カバレッジ付きでテストを実行
-npm run test:coverage
-
-# CI/CD用のテスト実行
-npm run test:ci
 ```
 
 ## プロジェクト構造
