@@ -18,8 +18,8 @@ Express.js + TypeScript + Jestによる実践的テストのサンプルコー�
 
 1. リポジトリをクローン
    ```
-   git clone https://github.com/yourusername/software-testing-example.git
-   cd software-testing-example
+   git clone https://github.com/Takuya-Ampi/primeanswer_test_project.git
+   cd primeanswer_test_project
    ```
 
 2. 依存関係をインストール
