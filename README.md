@@ -26,14 +26,14 @@ Express.js + TypeScript + Jestによる実践的テストのサンプルコー�
    npm install
    ```
 
-3. 開発用データベースを起動
+3. データベースを起動
    ```
-   docker-compose -f docker-compose.test.yml up -d postgres-local
+   docker-compose up -d
    ```
 
 4. 環境変数を設定
    ```
-   cp .env.example.local .env
+   cp .env.example .env
    ```
    `.env`ファイルが開発用の環境変数で設定されます。
 
@@ -70,66 +70,49 @@ Express.js + TypeScript + Jestによる実践的テストのサンプルコー�
    
    サーバーを停止するには、ターミナルで `Ctrl + C` （コントロール + C）を押してください。
 
-### テスト環境
+### テストの実行
 
-1. テスト用のデータベースを起動
-   ```
-   docker-compose -f docker-compose.test.yml up -d postgres-test
-   ```
+テストを実行するには、開発環境と同じデータベースを使用します：
 
-2. テスト用の環境変数を設定
-   ```
-   cp .env.example.test .env.test
-   ```
-   `.env.test`ファイルがテスト用の環境変数で設定されます。
-
-3. テストの実行
-   ```
-   npm run test
-   ```
+```
+npm run test
+```
 
 ## 環境変数ファイル
 
-プロジェクトには2つの環境変数のサンプルファイルが含まれています：
+プロジェクトには環境変数のサンプルファイルが含まれています：
 
-- `.env.example.local` - 開発環境用の設定例（ローカル開発用）
-- `.env.example.test` - テスト環境用の設定例（テスト実行用）
+- `.env.example` - 開発環境用の設定例
 
-実際に使用する場合は、これらのファイルをコピーして`.env`や`.env.test`として使用します。秘匿情報（シークレットキーなど）は本番環境では必ず変更してください。
+実際に使用する場合は、このファイルをコピーして`.env`として使用します。秘匿情報（シークレットキーなど）は本番環境では必ず変更してください。
 
 ## Docker環境について
 
 ### 利用可能なサービス
 
-- **postgres-local** - 開発環境用のデータベース（ポート5432）
-- **postgres-test** - テスト環境用のデータベース（ポート5433）
+- **postgres** - データベース（ポート5432）
 
-### 開発とテスト両方の環境を起動
+### Docker環境の起動
 
 ```bash
-docker-compose -f docker-compose.test.yml up -d
+docker-compose up -d
 ```
 
 ### Docker環境の停止方法
 
 コンテナの停止（データは保持されます）：
 ```bash
-docker-compose -f docker-compose.test.yml stop
+docker-compose stop
 ```
 
 コンテナの停止と削除（ボリュームはそのまま残ります）：
 ```bash
-docker-compose -f docker-compose.test.yml down
+docker-compose down
 ```
 
 コンテナとボリュームの両方を削除（すべてのデータが失われます）：
 ```bash
-docker-compose -f docker-compose.test.yml down -v
-```
-
-特定のサービスだけを停止する場合（例：postgres-test）：
-```bash
-docker-compose -f docker-compose.test.yml stop postgres-test
+docker-compose down -v
 ```
 
 ## テスト実行
@@ -165,10 +148,8 @@ npm run test:ci
 ├── jest.config.js       # Jestの設定
 ├── package.json         # 依存関係
 ├── tsconfig.json        # TypeScript設定
-├── docker-compose.test.yml # Docker Compose設定
-├── .env.example.local   # 開発環境用の環境変数例
-├── .env.example.test    # テスト環境用の環境変数例
-├── .env                 # 開発環境の環境変数（ローカル用）
-├── .env.test            # テスト環境の環境変数
+├── docker-compose.yml   # Docker Compose設定
+├── .env.example         # 環境変数のサンプル
+├── .env                 # 開発環境の環境変数
 └── README.md            # このファイル
 ``` 
