@@ -1305,54 +1305,11 @@ export const getAllPosts = async () => {
 };
 ```
 
----
 
-### テスト環境のセットアップ
-
-```yaml
-# src/docker-compose.test.yml
-version: '3.8'
-services:
-  postgres-test:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: test
-      POSTGRES_PASSWORD: test
-      POSTGRES_DB: test_db
-    ports:
-      - "5433:5432"
-    command: postgres -c fsync=off -c full_page_writes=off
-```
-
-```typescript
-// src/lib/prisma.ts
-import { PrismaClient } from '@prisma/client';
-
-export const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL,
-    },
-  },
-});
-```
 
 ---
 
 ### Jestの設定
-
-```typescript
-// src/jest.config.js
-module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  setupFilesAfterEnv: ['<rootDir>/src/test/setup.ts'],
-  testMatch: ['**/__tests__/**/*.test.ts'],
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
-  },
-};
-```
 
 ```typescript
 // src/test/setup.ts
@@ -1399,38 +1356,7 @@ describe('postService', () => {
     });
   });
 
-  describe('createPost', () => {
-    it('正常に投稿を作成できる', async () => {
-      const postData = {
-        title: 'テスト投稿',
-        content: 'テスト内容です',
-      };
-
-      const result = await createPost(postData);
-
-      expect(result).toHaveProperty('id');
-      expect(result.title).toBe(postData.title);
-      expect(result.content).toBe(postData.content);
-
-      // DBに保存されていることを確認
-      const savedPost = await prisma.post.findUnique({
-        where: { id: result.id },
-      });
-      expect(savedPost).not.toBeNull();
-    });
-
-    it('140文字を超える投稿はエラーを投げる', async () => {
-      const postData = {
-        title: 'テスト投稿',
-        content: 'a'.repeat(141),
-      };
-
-      await expect(createPost(postData)).rejects.toThrow(
-        '投稿内容は140文字以内である必要があります'
-      );
-    });
-  });
-});
+  
 ```
 
 ---
@@ -1459,29 +1385,6 @@ describe('Posts API Integration Tests', () => {
       expect(response.body.title).toBe(postData.title);
       expect(response.body.content).toBe(postData.content);
     });
-
-    it('必須フィールドが不足している場合は400エラー', async () => {
-      const response = await request(app)
-        .post('/posts')
-        .send({ title: 'タイトルのみ' })
-        .expect(400);
-
-      expect(response.body.error).toBe('必須項目が不足しています');
-    });
-
-    it('140文字を超える投稿は400エラー', async () => {
-      const longContent = 'a'.repeat(141);
-      const response = await request(app)
-        .post('/posts')
-        .send({
-          title: 'テスト投稿',
-          content: longContent,
-        })
-        .expect(400);
-
-      expect(response.body.error).toBe('投稿内容は140文字以内である必要があります');
-    });
-  });
 });
 ```
 
@@ -1584,24 +1487,7 @@ describe('createPostHandler', () => {
     expect(resJson).toHaveBeenCalledWith(mockPost);
   });
 
-  it('140文字を超える投稿はエラーを返す', async () => {
-    // createPostがエラーを投げるようにモック
-    (postService.createPost as jest.Mock).mockRejectedValue(
-      new Error('投稿内容は140文字以内である必要があります')
-    );
-
-    mockReq.body = {
-      title: 'テスト投稿',
-      content: 'a'.repeat(141),
-    };
-
-    await createPostHandler(mockReq as Request, mockRes as Response);
-
-    expect(resStatus).toHaveBeenCalledWith(400);
-    expect(resJson).toHaveBeenCalledWith({
-      error: '投稿内容は140文字以内である必要があります',
-    });
-  });
+  
 });
 ```
 
