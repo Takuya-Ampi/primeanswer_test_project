@@ -3,8 +3,7 @@
 # 環境変数ファイル
 .env
 .env.*
-!.env.example.local
-!.env.example.test
+!.env.example
 
 # 依存関係
 node_modules/
