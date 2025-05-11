@@ -1,4 +1,5 @@
-import { createPost } from '../postService';
+import request from 'supertest';
+import { app } from '../../app';
 import { prisma } from '../../lib/prisma';
 
 // テスト後にデータをクリーンアップ
@@ -6,36 +7,47 @@ afterEach(async () => {
   await prisma.post.deleteMany({});
 });
 
-describe('createPost', () => {
+describe('POST /posts', () => {
   it('正常に投稿を作成できる', async () => {
     const postData = {
       title: 'テスト投稿',
       content: 'テスト内容です',
     };
 
-    const result = await createPost(postData);
+    // APIエンドポイントにPOSTリクエストを送信
+    const response = await request(app)
+      .post('/posts')
+      .send(postData)
+      .expect(201);
 
-    expect(result).toHaveProperty('id');
-    expect(result.title).toBe(postData.title);
-    expect(result.content).toBe(postData.content);
+    // レスポンスの検証
+    expect(response.body).toHaveProperty('id');
+    expect(response.body.title).toBe(postData.title);
+    expect(response.body.content).toBe(postData.content);
 
     // DBに保存されていることを確認
     const savedPost = await prisma.post.findUnique({
-      where: { id: result.id },
+      where: { id: response.body.id },
     });
     expect(savedPost).not.toBeNull();
     expect(savedPost?.title).toBe(postData.title);
     expect(savedPost?.content).toBe(postData.content);
   });
 
-  it('140文字を超える投稿はエラーを投げる', async () => {
+  it('140文字を超える投稿はエラーを返す', async () => {
     const postData = {
       title: 'テスト投稿',
       content: 'a'.repeat(141),
     };
 
-    await expect(createPost(postData)).rejects.toThrow(
-      '投稿内容は140文字以内である必要があります'
-    );
+    // APIエンドポイントにPOSTリクエストを送信
+    const response = await request(app)
+      .post('/posts')
+      .send(postData)
+      .expect(400);
+
+    // エラーメッセージを検証
+    expect(response.body).toHaveProperty('error');
+    expect(response.body.error).toBe('投稿内容は140文字以内である必要があります');
   });
 }); 
