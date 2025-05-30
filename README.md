@@ -33,19 +33,17 @@ Express.js + TypeScript + Jestによる実践的テストのサンプルコー�
    ```
    `.env`ファイルが開発用の環境変数で設定されます。
 
-4. データベースを起動
+4. データベースを起動・初期化
    ```
-   docker-compose up -d
-   ```
-   
-   **重要**: データベースコンテナが完全に起動するまで数秒待機してください。初回起動時は初期化スクリプトが実行されるため、特に時間がかかる場合があります。
-   
-   データベースの起動状況は以下のコマンドで確認できます：
-   ```
-   docker-compose logs postgres
+   npm run db:start
    ```
    
-   「database system is ready to accept connections」のメッセージが表示されたら、データベースの準備が完了です。
+   このコマンドを実行すると以下の処理が自動的に行われます：
+   - Docker Composeでデータベースコンテナを起動
+   - データベースの初期化完了まで自動待機
+   - 初期化スクリプト（権限設定など）の実行
+   
+   正常に完了すると「✅ データベースが利用可能になりました」と表示されます。
 
 5. データベースマイグレーション
    ```
@@ -91,6 +89,24 @@ Swagger UI では以下のことができます：
 - 各エンドポイントのリクエスト/レスポンスの詳細確認
 - APIを直接テスト実行
 
+### 便利なコマンド
+
+プロジェクトには便利なnpmスクリプトが用意されています：
+
+```bash
+# 初回セットアップ（依存関係インストール + データベース起動）
+npm run setup
+
+# データベースを起動・初期化
+npm run db:start
+
+# データベースを停止
+npm run db:stop
+
+# データベースを完全にリセット（全データ削除 + 再起動）
+npm run db:reset
+```
+
 ### テストの実行
 
 テストを実行するには以下のコマンドを使用します：
@@ -132,10 +148,31 @@ npm run test:ci
 
 - **postgres** - データベース（ポート5432）
 
-### Docker環境の起動
+### Docker環境の管理
+
+自動化されたスクリプトを使用することを推奨します：
 
 ```bash
+# データベースを起動・初期化（推奨）
+npm run db:start
+
+# データベースを停止
+npm run db:stop
+
+# データベースを完全にリセット
+npm run db:reset
+```
+
+### 手動でのDocker操作
+
+必要に応じて手動でDockerを操作することも可能です：
+
+```bash
+# 手動起動
 docker-compose up -d
+
+# 手動停止
+docker-compose stop
 ```
 
 ### Docker環境の停止方法
@@ -161,17 +198,19 @@ docker-compose down -v
 
 1. **権限エラー（P1010）が発生する場合**
    
-   既存のPostgreSQLボリュームを削除して、新しい権限設定で再作成してください：
+   データベースを完全にリセットしてください：
    ```bash
-   docker-compose down -v
-   docker-compose up -d
+   npm run db:reset
    ```
    
-   データベースが完全に起動するまで30秒程度待機してから、マイグレーションを実行してください。
+   データベースが完全に起動してから、マイグレーションを実行してください：
+   ```bash
+   npx prisma migrate dev
+   ```
 
 2. **データベース接続タイムアウトが発生する場合**
    
-   データベースコンテナが完全に起動していない可能性があります：
+   データベースの状態を確認してください：
    ```bash
    # ログで起動状況を確認
    docker-compose logs postgres
@@ -179,15 +218,24 @@ docker-compose down -v
    # コンテナの状態を確認
    docker-compose ps
    ```
-
-3. **既存のデータをリセットしたい場合**
    
+   問題が解決しない場合は、データベースを再起動してください：
    ```bash
-   # データベースを完全にリセット
+   npm run db:reset
+   ```
+
+3. **npm run db:start が失敗する場合**
+   
+   Dockerが正常に動作していることを確認してください：
+   ```bash
+   docker --version
+   docker-compose --version
+   ```
+   
+   手動でDockerコンテナを停止してからやり直してください：
+   ```bash
    docker-compose down -v
-   docker-compose up -d
-   # データベース起動を待機してから
-   npx prisma migrate dev
+   npm run db:start
    ```
 
 ## プロジェクト構造
@@ -197,6 +245,9 @@ docker-compose down -v
 ├── docker/              # Docker設定
 │   └── init-db.sql      # PostgreSQL初期化スクリプト
 ├── prisma/              # Prisma設定
+├── scripts/             # 自動化スクリプト
+│   ├── init-db.js       # データベース初期化スクリプト（Node.js）
+│   └── init-db.sh       # データベース初期化スクリプト（Bash）
 ├── src/
 │   ├── controllers/     # APIコントローラー
 │   ├── lib/             # ライブラリ（Prismaなど）
