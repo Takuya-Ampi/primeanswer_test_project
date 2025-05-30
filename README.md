@@ -242,8 +242,6 @@ docker-compose down -v
 
 ```
 .
-├── docker/              # Docker設定
-│   └── init-db.sql      # PostgreSQL初期化スクリプト
 ├── prisma/              # Prisma設定
 ├── scripts/             # 自動化スクリプト
 │   ├── init-db.js       # データベース初期化スクリプト（Node.js）
