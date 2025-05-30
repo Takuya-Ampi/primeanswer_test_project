@@ -1305,6 +1305,215 @@ export const getAllPosts = async () => {
 };
 ```
 
+---
+### Jestの基礎構文
+
+<div class="center-content" style="height: 80%;">
+
+## テストフレームワークJestの基本的な構文と概念
+
+テストを書く前に、まずJestの基本的な構文を理解しましょう
+
+</div>
+
+---
+
+### テスト構造の基本
+
+```typescript
+describe('テストグループ名', () => {
+  it('テストケース名', () => {
+    // テストコードを記述
+    expect(実際の値).toBe(期待する値);
+  });
+});
+```
+
+<div class="columns">
+
+<div>
+
+## **describe()**
+- テストをグループ化
+- ネスト可能
+- 同じ機能のテストをまとめる
+
+</div>
+
+<div>
+
+## **it() / test()**
+- 個別のテストケース
+- 1つの機能・動作をテスト
+- わかりやすい名前をつける
+
+</div>
+
+</div>
+
+---
+
+### ライフサイクルフック
+
+テストの前後に実行される処理を定義できます
+
+```typescript
+describe('商品管理', () => {
+  beforeAll(() => {
+    // 全テスト実行前に1回だけ実行
+    console.log('データベース接続');
+  });
+
+  afterAll(() => {
+    // 全テスト実行後に1回だけ実行
+    console.log('データベース切断');
+  });
+
+  beforeEach(() => {
+    // 各テスト実行前に毎回実行
+    console.log('テストデータを準備');
+  });
+
+  afterEach(() => {
+    // 各テスト実行後に毎回実行
+    console.log('テストデータをクリア');
+  });
+});
+```
+
+---
+
+### expect()とマッチャー
+
+<div class="columns">
+
+<div>
+
+## **基本的なマッチャー**
+```typescript
+// 値の比較
+expect(value).toBe(expected);
+expect(value).toEqual(expected);
+
+// 真偽値
+expect(value).toBeTruthy();
+expect(value).toBeFalsy();
+
+// null/undefined
+expect(value).toBeDefined();
+expect(value).toBeUndefined();
+expect(value).toBeNull();
+```
+
+</div>
+
+<div>
+
+## **数値・文字列のマッチャー**
+```typescript
+// 数値比較
+expect(number).toBeGreaterThan(5);
+expect(number).toBeLessThan(10);
+
+// 文字列検索
+expect(text).toContain('検索文字');
+expect(text).toMatch(/正規表現/);
+
+// 配列・オブジェクト
+expect(array).toHaveLength(3);
+expect(obj).toHaveProperty('name');
+```
+
+</div>
+
+</div>
+
+---
+
+### toBeとtoEqualの違い
+
+<div class="columns">
+
+<div>
+
+## **toBe()** - 厳密等価
+```typescript
+// プリミティブ値の比較
+expect(5).toBe(5); // ✅
+expect('hello').toBe('hello'); // ✅
+
+// オブジェクトの参照比較
+const obj1 = { name: 'test' };
+const obj2 = { name: 'test' };
+expect(obj1).toBe(obj2); // ❌ 失敗
+expect(obj1).toBe(obj1); // ✅ 成功
+```
+
+</div>
+
+<div>
+
+## **toEqual()** - 値の比較
+```typescript
+// オブジェクトの値を比較
+const obj1 = { name: 'test', age: 20 };
+const obj2 = { name: 'test', age: 20 };
+expect(obj1).toEqual(obj2); // ✅ 成功
+
+// 配列の値を比較
+expect([1, 2, 3]).toEqual([1, 2, 3]); // ✅
+expect([1, 2, 3]).toBe([1, 2, 3]); // ❌ 失敗
+```
+
+</div>
+
+</div>
+
+---
+
+### 非同期処理のテスト
+
+<div class="columns">
+
+<div>
+
+## **async/await**
+```typescript
+it('非同期処理のテスト', async () => {
+  const result = await fetchData();
+  expect(result).toBe('データ');
+});
+```
+
+</div>
+
+<div>
+
+## **Promiseのテスト**
+```typescript
+it('Promiseのテスト', () => {
+  return fetchData().then(result => {
+    expect(result).toBe('データ');
+  });
+});
+```
+
+</div>
+
+</div>
+
+## **エラーのテスト**
+```typescript
+it('エラーが発生することをテスト', () => {
+  expect(() => {
+    throwError();
+  }).toThrow('エラーメッセージ');
+});
+```
+
+
+
+
 
 
 ---
