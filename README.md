@@ -27,16 +27,25 @@ Express.js + TypeScript + Jestによる実践的テストのサンプルコー�
    npm install
    ```
 
-3. データベースを起動
-   ```
-   docker-compose up -d
-   ```
-
-4. 環境変数を設定
+3. 環境変数を設定
    ```
    cp .env.example .env
    ```
    `.env`ファイルが開発用の環境変数で設定されます。
+
+4. データベースを起動
+   ```
+   docker-compose up -d
+   ```
+   
+   **重要**: データベースコンテナが完全に起動するまで数秒待機してください。初回起動時は初期化スクリプトが実行されるため、特に時間がかかる場合があります。
+   
+   データベースの起動状況は以下のコマンドで確認できます：
+   ```
+   docker-compose logs postgres
+   ```
+   
+   「database system is ready to accept connections」のメッセージが表示されたら、データベースの準備が完了です。
 
 5. データベースマイグレーション
    ```
@@ -146,10 +155,47 @@ docker-compose down
 docker-compose down -v
 ```
 
+## トラブルシューティング
+
+### データベース接続エラーが発生する場合
+
+1. **権限エラー（P1010）が発生する場合**
+   
+   既存のPostgreSQLボリュームを削除して、新しい権限設定で再作成してください：
+   ```bash
+   docker-compose down -v
+   docker-compose up -d
+   ```
+   
+   データベースが完全に起動するまで30秒程度待機してから、マイグレーションを実行してください。
+
+2. **データベース接続タイムアウトが発生する場合**
+   
+   データベースコンテナが完全に起動していない可能性があります：
+   ```bash
+   # ログで起動状況を確認
+   docker-compose logs postgres
+   
+   # コンテナの状態を確認
+   docker-compose ps
+   ```
+
+3. **既存のデータをリセットしたい場合**
+   
+   ```bash
+   # データベースを完全にリセット
+   docker-compose down -v
+   docker-compose up -d
+   # データベース起動を待機してから
+   npx prisma migrate dev
+   ```
+
 ## プロジェクト構造
 
 ```
 .
+├── docker/              # Docker設定
+│   └── init-db.sql      # PostgreSQL初期化スクリプト
 ├── prisma/              # Prisma設定
 ├── src/
 │   ├── controllers/     # APIコントローラー
